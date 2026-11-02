@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>UAF 标准格式｜让作业，表里都清楚</title>
+  <meta name="description" content="UAF（Unified Assignment Format）v1.0 是一种面向家校作业场景的开放文件交换标准：一份 PDF 同时承载可读的作业卡片与可解析的内嵌 CSV，无需 OCR。">
+  <meta name="theme-color" content="#FFFCF8">
+  <meta property="og:title" content="UAF 标准格式｜让作业，表里都清楚">
+  <meta property="og:description" content="一份 PDF，两层信息。人能看到作业看板，平台能直接读取内嵌数据。">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="./assets/logo-badge.svg" type="image/svg+xml">
+  <link rel="preload" href="./assets/fonts/uaf-serif-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./assets/fonts/uaf-serif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="icon-arrow-up-right" viewBox="0 0 20 20"><path d="M5 15 15 5M8 5h7v7"/></symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 20 20"><path d="M4 10h12M11 5l5 5-5 5"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header shell">
+    <a class="brand" href="#top">
+      <img class="brand__logo" src="./assets/logo.svg" width="120" height="120" alt="">
+      <span class="brand__lockup">
+        <span class="brand__mark">UAF</span>
+        <span class="brand__name">统一作业展示与交换格式</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="页面导航">
+      <a href="#card-brand">主张</a>
+      <a href="#card-value">价值</a>
+      <a href="#card-devices">设备</a>
+      <a href="#card-story">视觉</a>
+      <a href="#card-product">产品</a>
+      <a href="#styles">样式</a>
+    </nav>
+    <button class="button button--primary site-cta" type="button" data-open-experience aria-haspopup="dialog" aria-controls="experience-dialog">本地演示</button>
+  </header>
+
+  <noscript>
+    <p class="noscript shell">卡片详情与演示表单需要 JavaScript。</p>
+  </noscript>
+
+  <main id="main">
+    <section class="intro shell" id="top" aria-labelledby="page-title">
+      <div class="intro__title">
+        <p class="eyebrow">UAF · Unified Assignment Format · v1.0</p>
+        <h1 id="page-title">让作业，<br><span class="accent">表里</span>都清楚。</h1>
+      </div>
+      <div class="intro__copy">
+        <p class="lead">开放标准：一份 PDF，两层信息。</p>
+      </div>
+    </section>
+
+    <section class="collection shell" aria-labelledby="collection-title">
+      <div class="collection__head">
+        <h2 id="collection-title">六个切面</h2>
+      </div>
+
+      <div class="card-grid">
+        <article class="card card--brand" id="card-brand" tabindex="-1">
+          <div class="card__meta">
+            <span class="card__index" aria-hidden="true">01</span>
+            <span class="card__kicker">品牌主张</span>
+          </div>
+          <h3 class="card__title" id="card-brand-title">表与里，<br>在同一份文件里</h3>
+          <p class="card__copy">表给人读，里给系统用。</p>
+          <figure class="card__media card__media--compose">
+            <div class="uaf-compose" aria-hidden="true">
+              <div class="data-sheet">
+                <div class="data-sheet__bar"><span>uaf_payload.csv</span><span>3 rows</span></div>
+                <div class="data-sheet__row data-sheet__row--head"><span>subject</span><span>date</span><span>content</span><span>tags</span></div>
+                <div class="data-sheet__row"><span>数学</span><span>2026-05-19</span><span>完成课本第45页…</span><span>必做;几何</span></div>
+                <div class="data-sheet__row"><span>语文</span><span>2026-05-19</span><span>背诵《静夜思》…</span><span>背诵</span></div>
+                <div class="data-sheet__row"><span>英语</span><span>2026-05-19</span><span>朗读课文 Unit 3…</span><span>—</span></div>
+              </div>
+              <div class="uaf-card uaf-card--feature">
+                <div class="uaf-card__head">
+                  <span class="uaf-card__subject">数学</span>
+                  <span class="uaf-card__date">2026年5月19日</span>
+                </div>
+                <p class="uaf-card__content">完成课本第45页第1、2题，请拍照上传。</p>
+                <ul class="uaf-card__tags"><li>必做</li><li>几何</li><li>重难点</li></ul>
+              </div>
+              <span class="uaf-card__watermark">本文件符合UAF标准规范</span>
+            </div>
+            <figcaption>示例渲染 · 表与里</figcaption>
+          </figure>
+          <span class="card__action" aria-hidden="true">展开主张 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></span>
+          <button class="card__open" type="button" data-detail="brand" aria-haspopup="dialog" aria-controls="card-dialog" aria-labelledby="card-brand-title card-brand-action"><span class="sr-only" id="card-brand-action">查看详情</span></button>
+        </article>
+
+        <article class="card card--white" id="card-value" tabindex="-1">
+          <div class="card__meta">
+            <span class="card__index" aria-hidden="true">02</span>
+            <span class="card__kicker">服务价值</span>
+          </div>
+          <h3 class="card__title" id="card-value-title">老师、家长、平台，各读各的</h3>
+          <ul class="value-list" aria-label="三类使用者的直接收益">
+            <li><span>老师</span><p>少一次重复排版</p></li>
+            <li><span>家长</span><p>打开 PDF 就能读</p></li>
+            <li><span>平台</span><p>零 OCR 读取数据</p></li>
+          </ul>
+          <span class="card__action" aria-hidden="true">按角色看价值 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></span>
+          <button class="card__open" type="button" data-detail="value" aria-haspopup="dialog" aria-controls="card-dialog" aria-labelledby="card-value-title card-value-action"><span class="sr-only" id="card-value-action">查看详情</span></button>
+        </article>
+
+        <article class="card card--gradient" id="card-devices" tabindex="-1">
+          <div class="card__meta">
+            <span class="card__index" aria-hidden="true">03</span>
+            <span class="card__kicker">设备</span>
+          </div>
+          <h3 class="card__title" id="card-devices-title">能打开 PDF，就能看见作业</h3>
+          <p class="card__copy">不装 UAF App。</p>
+          <figure class="card__media card__media--devices">
+            <div class="device-compose" aria-hidden="true">
+              <div class="device-phone">
+                <span class="device-phone__notch"></span>
+                <div class="device-phone__screen">
+                  <div class="uaf-card uaf-card--phone">
+                    <div class="uaf-card__head">
+                      <span class="uaf-card__subject">数学</span>
+                      <span class="uaf-card__date">2026年5月19日</span>
+                    </div>
+                    <p class="uaf-card__content">完成课本第45页第1、2题，请拍照上传。</p>
+                    <ul class="uaf-card__tags"><li>必做</li><li>几何</li></ul>
+                  </div>
+                </div>
+              </div>
+              <div class="device-print">
+                <div class="paper-page__bar"><span>作业看板</span><span>A4 · 打印</span></div>
+                <div class="uaf-card uaf-card--print">
+                  <div class="uaf-card__head">
+                    <span class="uaf-card__subject">语文</span>
+                    <span class="uaf-card__date">2026年5月19日</span>
+                  </div>
+                  <p class="uaf-card__content">背诵《静夜思》，完成第二段仿写。</p>
+                  <ul class="uaf-card__tags"><li>背诵</li></ul>
+                </div>
+                <span class="paper-page__watermark">本文件符合UAF标准规范</span>
+              </div>
+            </div>
+            <figcaption>示例渲染 · 窄屏 / 打印</figcaption>
+          </figure>
+          <span class="card__action" aria-hidden="true">看看设备怎么读 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></span>
+          <button class="card__open" type="button" data-detail="devices" aria-haspopup="dialog" aria-controls="card-dialog" aria-labelledby="card-devices-title card-devices-action"><span class="sr-only" id="card-devices-action">查看详情</span></button>
+        </article>
+
+        <article class="card card--white" id="card-story" tabindex="-1">
+          <div class="card__meta">
+            <span class="card__index" aria-hidden="true">04</span>
+            <span class="card__kicker">视觉故事</span>
+          </div>
+          <h3 class="card__title" id="card-story-title">一张卡片，<br>如何变成一条记录</h3>
+          <p class="card__copy">科目、日期、正文、标签、水印。</p>
+          <figure class="card__media card__media--paper">
+            <div class="uaf-card uaf-card--feature" aria-hidden="true">
+              <div class="uaf-card__head">
+                <span class="uaf-card__subject">数学</span>
+                <span class="uaf-card__date">2026年5月19日</span>
+              </div>
+              <p class="uaf-card__content">完成课本第45页第1、2题，请拍照上传。</p>
+              <ul class="uaf-card__tags"><li>必做</li><li>几何</li><li>重难点</li></ul>
+            </div>
+            <span class="uaf-card__watermark" aria-hidden="true">本文件符合UAF标准规范</span>
+            <figcaption>示例作业</figcaption>
+          </figure>
+          <span class="card__action" aria-hidden="true">拆开这张卡 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></span>
+          <button class="card__open" type="button" data-detail="story" aria-haspopup="dialog" aria-controls="card-dialog" aria-labelledby="card-story-title card-story-action"><span class="sr-only" id="card-story-action">查看详情</span></button>
+        </article>
+
+        <article class="card card--mist" id="card-product" tabindex="-1">
+          <div class="card__meta">
+            <span class="card__index" aria-hidden="true">05</span>
+            <span class="card__kicker">产品介绍</span>
+          </div>
+          <h3 class="card__title" id="card-product-title">一个开放格式，三种交付形态</h3>
+          <p class="card__copy">PDF 交换，HTML 预览，.uaf 打包。</p>
+          <ul class="format-list" aria-label="UAF 的三种交付形态">
+            <li>PDF</li>
+            <li>HTML</li>
+            <li>.uaf / .zip</li>
+          </ul>
+          <figure class="card__media card__media--package">
+            <div class="package-compose" aria-hidden="true">
+              <div class="package-compose__bar"><span>uaf-artifact-set</span><span>示例</span></div>
+              <div class="package-compose__body">
+                <ul class="package-files">
+                  <li>uaf-manifest.json</li>
+                  <li>uaf_payload.csv</li>
+                  <li>display.html</li>
+                  <li>document.pdf</li>
+                </ul>
+                <div class="package-preview">
+                  <div class="paper-page__bar"><span>document.pdf</span><span>PDF</span></div>
+                  <div class="uaf-card uaf-card--package">
+                    <div class="uaf-card__head">
+                      <span class="uaf-card__subject">英语</span>
+                      <span class="uaf-card__date">2026年5月19日</span>
+                    </div>
+                    <p class="uaf-card__content">朗读课文 Unit 3 并完成练习册。</p>
+                    <ul class="uaf-card__tags"><li>朗读</li></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption>示例制品结构</figcaption>
+
+          </figure>
+          <span class="card__action" aria-hidden="true">看产物与实现 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></span>
+          <button class="card__open" type="button" data-detail="product" aria-haspopup="dialog" aria-controls="card-dialog" aria-labelledby="card-product-title card-product-action"><span class="sr-only" id="card-product-action">查看详情</span></button>
+        </article>
+
+        <article class="card card--dark" id="card-experience" tabindex="-1">
+          <div class="card__meta">
+            <span class="card__index" aria-hidden="true">06</span>
+            <span class="card__kicker">体验入口</span>
+          </div>
+          <h3 class="card__title" id="card-experience-title">先走一遍，<br>不发出一条数据</h3>
+          <div class="form-preview" aria-hidden="true">
+            <div class="form-preview__top"><span>本地演示</span></div>
+            <div class="form-preview__line"><span>称呼</span><i></i></div>
+            <div class="form-preview__line"><span>身份</span><i></i></div>
+            <div class="form-preview__line"><span>邮箱</span><i></i></div>
+            <div class="form-preview__button">生成本地回执</div>
+          </div>
+          <span class="card__action" aria-hidden="true">打开申请表 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></span>
+          <button class="card__open" type="button" data-open-experience aria-haspopup="dialog" aria-controls="experience-dialog" aria-labelledby="card-experience-title card-experience-action"><span class="sr-only" id="card-experience-action">打开本地演示申请表</span></button>
+        </article>
+      </div>
+    </section>
+
+    <section class="styles shell" id="styles" aria-labelledby="styles-title">
+      <div class="styles__head">
+        <h2 id="styles-title" tabindex="-1">同一份作业，四种样子。</h2>
+      </div>
+
+      <div class="style-picker" role="group" aria-label="切换样式">
+        <div class="style-picker__buttons">
+          <button type="button" data-style="default" aria-pressed="true">粉纸</button>
+          <button type="button" data-style="warm" aria-pressed="false">暖纸</button>
+          <button type="button" data-style="mint" aria-pressed="false">薄荷</button>
+          <button type="button" data-style="ink" aria-pressed="false">墨色</button>
+        </div>
+        <p class="sr-only" id="style-status" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="style-stage" id="style-stage" data-style="default">
+        <div class="style-sheet" aria-hidden="true">
+          <div class="style-sheet__head">
+            <span class="style-sheet__title">作业看板</span>
+            <span class="style-sheet__meta">2026年5月19日</span>
+          </div>
+          <div class="style-sheet__cards">
+            <div class="uaf-card">
+              <div class="uaf-card__head">
+                <span class="uaf-card__subject">数学</span>
+                <span class="uaf-card__date">2026年5月19日</span>
+              </div>
+              <p class="uaf-card__content">完成课本第45页第1、2题，请拍照上传。</p>
+              <ul class="uaf-card__tags"><li>必做</li><li>几何</li><li>重难点</li></ul>
+            </div>
+            <div class="uaf-card">
+              <div class="uaf-card__head">
+                <span class="uaf-card__subject">语文</span>
+                <span class="uaf-card__date">2026年5月19日</span>
+              </div>
+              <p class="uaf-card__content">背诵《静夜思》，完成第二段仿写。</p>
+              <ul class="uaf-card__tags"><li>背诵</li></ul>
+            </div>
+          </div>
+          <span class="style-sheet__watermark">本文件符合UAF标准规范</span>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div class="site-footer__top">
+      <div>
+        <p class="site-footer__brand">
+          <img class="site-footer__logo" src="./assets/logo-badge.svg" width="120" height="120" alt="">
+          <span class="site-footer__wordmark">UAF <span>统一作业展示与交换格式</span></span>
+        </p>
+        <p class="site-footer__note">本页不是 UAF 文件。</p>
+      </div>
+      <nav class="site-footer__links" aria-label="仓库与许可">
+        <a href="https://github.com/wwiinnddyy/UnifiedAssignmentFormat/blob/main/spec/uaf-v1.0.md" target="_blank" rel="noopener noreferrer">规范<span class="sr-only">（在新窗口打开）</span></a>
+        <a href="https://github.com/wwiinnddyy/UnifiedAssignmentFormat" target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only">（在新窗口打开）</span></a>
+        <a href="https://github.com/wwiinnddyy/UnifiedAssignmentFormat/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0-or-later<span class="sr-only">（在新窗口打开）</span></a>
+        <a href="./assets/fonts/OFL.txt">字体许可</a>
+        <a href="#top">回到顶部</a>
+      </nav>
+    </div>
+    <div class="site-footer__fine">
+      <p>卡面为 HTML/CSS 渲染；作业内容为示例；本站无客户、业绩或研究数据。</p>
+    </div>
+  </footer>
+
+  <dialog class="dialog" id="card-dialog" aria-labelledby="card-dialog-title">
+    <div class="dialog__panel">
+      <header class="dialog__head">
+        <div>
+          <h2 id="card-dialog-title" tabindex="-1">详情</h2>
+        </div>
+        <button class="dialog__close" type="button" data-close-dialog aria-label="关闭详情">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-close"></use></svg>
+        </button>
+      </header>
+      <div class="dialog__body" id="card-dialog-body"></div>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="experience-dialog" aria-labelledby="experience-title">
+    <div class="dialog__panel">
+      <header class="dialog__head">
+        <div>
+          <h2 id="experience-title" tabindex="-1">本地演示申请表</h2>
+        </div>
+        <button class="dialog__close" type="button" data-close-dialog aria-label="关闭申请表">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-close"></use></svg>
+        </button>
+      </header>
+      <div class="dialog__body">
+        <div class="demo-notice" id="demo-notice">
+          <p class="demo-notice__badge">本地演示</p>
+          <p>填写和回执只在当前浏览器完成；不会发送给任何服务商，也不会保存。</p>
+        </div>
+
+        <form class="apply-form" id="apply-form" novalidate>
+          <div class="error-summary" id="form-errors" role="alert" tabindex="-1" hidden>
+            <h3>请检查</h3>
+            <ul id="form-error-list"></ul>
+          </div>
+
+          <div class="field">
+            <label for="apply-name">称呼 <span class="field__required">必填</span></label>
+            <input id="apply-name" name="name" type="text" autocomplete="name" maxlength="40" required aria-describedby="apply-name-error" aria-invalid="false">
+            <p class="field__error" id="apply-name-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="apply-role">身份 <span class="field__required">必填</span></label>
+            <select id="apply-role" name="role" required aria-describedby="apply-role-error" aria-invalid="false">
+              <option value="">请选择</option>
+              <option value="teacher">老师</option>
+              <option value="student">学生</option>
+              <option value="parent">家长</option>
+              <option value="platform">平台 / 开发者</option>
+              <option value="other">其他</option>
+            </select>
+            <p class="field__error" id="apply-role-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="apply-email">联系邮箱 <span class="field__required">必填</span></label>
+            <p class="field__hint" id="apply-email-hint">仅用于格式校验。</p>
+            <input id="apply-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="apply-email-hint apply-email-error" aria-invalid="false">
+            <p class="field__error" id="apply-email-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="apply-interest">想先了解 <span class="field__optional">选填</span></label>
+            <select id="apply-interest" name="interest">
+              <option value="">暂不选择</option>
+              <option value="spec">标准规范</option>
+              <option value="samples">样例文件</option>
+              <option value="integration">接入方式</option>
+              <option value="visual">视觉样式</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+
+          <div class="field field--check">
+            <label class="check-label" for="apply-consent">
+              <input id="apply-consent" name="consent" type="checkbox" required aria-describedby="apply-consent-error" aria-invalid="false">
+              <span>我了解：这是本地演示。</span>
+            </label>
+            <p class="field__error" id="apply-consent-error" hidden></p>
+          </div>
+
+          <button class="button button--primary button--wide" id="apply-submit" type="button">生成本地回执</button>
+        </form>
+
+        <section class="receipt" id="apply-receipt" tabindex="-1" aria-labelledby="receipt-title" hidden>
+          <p class="receipt__badge">未发送 · 未保存</p>
+          <h3 id="receipt-title">本地回执</h3>
+          <p>仅在本页显示，关闭即消失。</p>
+          <dl class="receipt__list">
+            <div><dt>称呼</dt><dd id="receipt-name"></dd></div>
+            <div><dt>身份</dt><dd id="receipt-role"></dd></div>
+            <div><dt>联系邮箱</dt><dd id="receipt-email"></dd></div>
+            <div><dt>想先了解</dt><dd id="receipt-interest"></dd></div>
+          </dl>
+          <div class="receipt__actions">
+            <button class="button button--primary" type="button" data-edit-form>重新填写</button>
+            <button class="button button--secondary" type="button" data-close-dialog>关闭</button>
+          </div>
+        </section>
+
+        <section class="samples" aria-labelledby="samples-title">
+          <h3 class="sr-only" id="samples-title">样例</h3>
+          <div class="link-row">
+            <a class="text-link" href="./samples/sample-homework.pdf" target="_blank" rel="noopener">打开样例 PDF <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+            <a class="text-link" href="./samples/sample-homework.html" target="_blank" rel="noopener">打开样例 HTML <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <template id="tpl-brand">
+    <div class="layer-diagram" aria-hidden="true">
+      <div class="layer-diagram__file"><span class="layer-diagram__format">PDF</span><span>一份交换文件</span></div>
+      <div class="layer-diagram__layers">
+        <div class="layer-diagram__layer layer-diagram__layer--display"><span>表</span><strong>作业看板</strong><small>人可读 · 可打印</small></div>
+        <div class="layer-diagram__layer layer-diagram__layer--data"><span>里</span><strong>uaf_payload.csv</strong><small>机器可读 · 零 OCR</small></div>
+      </div>
+    </div>
+    <h3>合规条件</h3>
+    <ul class="check-list">
+      <li>PDF 内含可提取的 <code>uaf_payload.csv</code> 附件。</li>
+      <li>CSV 符合四字段 schema：<code>subject</code>、<code>date</code>、<code>content</code>、<code>tags</code>。</li>
+      <li>每页包含固定水印「本文件符合UAF标准规范」。</li>
+    </ul>
+    <p class="fine-print">视觉不是合规条件。</p>
+    <div class="link-row">
+      <a class="text-link" href="https://github.com/wwiinnddyy/UnifiedAssignmentFormat/blob/main/spec/uaf-v1.0.md" target="_blank" rel="noopener noreferrer">阅读 v1.0 总规范 <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+      <a class="text-link" href="https://github.com/wwiinnddyy/UnifiedAssignmentFormat" target="_blank" rel="noopener noreferrer">打开 GitHub 仓库 <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+    </div>
+  </template>
+
+  <template id="tpl-value">
+    <div class="role-filter" role="group" aria-labelledby="role-filter-label">
+      <span class="filter-label" id="role-filter-label">按角色查看</span>
+      <div class="role-filter__buttons">
+        <button type="button" data-role="teacher" aria-pressed="true" aria-controls="role-panel-teacher">老师</button>
+        <button type="button" data-role="family" aria-pressed="false" aria-controls="role-panel-family">学生与家长</button>
+        <button type="button" data-role="platform" aria-pressed="false" aria-controls="role-panel-platform">平台与系统</button>
+      </div>
+    </div>
+    <div class="role-panel" id="role-panel-teacher" role="region" aria-labelledby="role-teacher-title">
+      <h3 class="sr-only" id="role-teacher-title">老师</h3>
+      <ul class="check-list">
+        <li>多张作业卡，超出自动续页。</li>
+        <li>打印、投屏、常见阅读器通用。</li>
+      </ul>
+    </div>
+    <div class="role-panel" id="role-panel-family" role="region" aria-labelledby="role-family-title" hidden>
+      <h3 class="sr-only" id="role-family-title">学生与家长</h3>
+      <ul class="check-list">
+        <li>常见 PDF 阅读器直接打开。</li>
+      </ul>
+    </div>
+    <div class="role-panel" id="role-panel-platform" role="region" aria-labelledby="role-platform-title" hidden>
+      <h3 class="sr-only" id="role-platform-title">平台与系统</h3>
+      <ul class="check-list">
+        <li>从 <code>/EmbeddedFiles</code> 读取 <code>uaf_payload.csv</code>，不需要 OCR。</li>
+      </ul>
+    </div>
+    <p class="sr-only" id="role-status" role="status" aria-live="polite"></p>
+    <p class="fine-print">UAF 不提供托管或代收作业服务。</p>
+  </template>
+
+  <template id="tpl-devices">
+    <div class="device-list">
+      <div class="device-row"><h3>手机 / 平板</h3><p>系统或第三方 PDF 阅读器直接打开。</p></div>
+      <div class="device-row"><h3>电脑</h3><p>浏览器、桌面阅读器均可查看。</p></div>
+      <div class="device-row"><h3>打印</h3><p>A4 纵向输出，超出自动续页。</p></div>
+      <div class="device-row"><h3>平台接入</h3><p>从 <code>/EmbeddedFiles</code> 读取 CSV；不支持 UAF 的阅读器只显示展示层。</p></div>
+    </div>
+    <div class="callout">不支持 UAF 的环境仍可读展示层，但拿不到数据层。</div>
+    <div class="link-row">
+      <a class="text-link" href="./samples/sample-homework.pdf" target="_blank" rel="noopener">打开样例 PDF <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+      <a class="text-link" href="./samples/sample-homework.html" target="_blank" rel="noopener">打开样例 HTML <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+    </div>
+  </template>
+
+  <template id="tpl-story">
+    <p class="dialog-lead">同一份数据，先成卡片，再成 CSV。</p>
+    <div class="story-layout">
+      <div class="story-sample">
+        <div class="uaf-card uaf-card--feature">
+          <div class="uaf-card__head">
+            <span class="uaf-card__subject">数学</span>
+            <span class="uaf-card__date">2026年5月19日</span>
+          </div>
+          <p class="uaf-card__content">完成课本第45页第1、2题，请拍照上传。</p>
+          <ul class="uaf-card__tags"><li>必做</li><li>几何</li><li>重难点</li></ul>
+        </div>
+        <span class="uaf-card__watermark">本文件符合UAF标准规范</span>
+      </div>
+      <div class="story-notes">
+        <p>放不下时续页，不丢正文与标签。</p>
+      </div>
+    </div>
+    <p class="fine-print">示例内容来自 <code>examples/</code>；下方可切换四种样式。</p>
+    <div class="link-row">
+      <button class="button button--secondary" type="button" data-go-styles>查看四种样式 <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-right"></use></svg></button>
+    </div>
+  </template>
+
+  <template id="tpl-product">
+    <p class="dialog-lead">规范、样例与三种参考实现。</p>
+    <dl class="artifact-list">
+      <div><dt><code>.pdf</code><span>交换载体</span></dt><dd>展示卡片 + 内嵌 <code>uaf_payload.csv</code>，一份文件完成人与机器的交付。</dd></div>
+      <div><dt><code>.html</code><span>预览 / 打印</span></dt><dd>自包含 HTML，内联 CSS；数据放在 <code>uaf-payload-csv</code> template 中。</dd></div>
+      <div><dt><code>.uaf</code> / <code>.uaf.zip</code><span>工程整合包</span></dt><dd>manifest、CSV、HTML、PDF 组成可校验的 artifact set，带 SHA-256。</dd></div>
+    </dl>
+    <ul class="impl-list">
+      <li><strong>TypeScript / Node</strong><span>≥ 20 · <code>@uaf/core</code>、<code>@uaf/html</code>、<code>@uaf/pdf</code>、<code>uaf</code> CLI</span></li>
+      <li><strong>C# / .NET</strong><span>.NET 8 参考实现</span></li>
+      <li><strong>Flutter / Dart</strong><span>Dart ≥ 3.8 · CSV、HTML、PDF 与整合包 SDK</span></li>
+    </ul>
+    <pre class="code-block"><code>subject,date,content,tags
+数学,2026-05-19,完成课本第45页第1、2题，请拍照上传。,必做;几何;重难点</code></pre>
+    <p class="fine-print">样例仅 PDF / HTML；整合包见仓库规范。</p>
+    <div class="link-row">
+      <a class="text-link" href="./samples/sample-homework.pdf" target="_blank" rel="noopener">打开样例 PDF <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+      <a class="text-link" href="./samples/sample-homework.html" target="_blank" rel="noopener">打开样例 HTML <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+      <a class="text-link" href="https://github.com/wwiinnddyy/UnifiedAssignmentFormat/blob/main/spec/file-integration-standard.md" target="_blank" rel="noopener noreferrer">阅读整合包规范 <span class="sr-only">（在新窗口打开）</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow-up-right"></use></svg></a>
+    </div>
+  </template>
+</body>
+</html>

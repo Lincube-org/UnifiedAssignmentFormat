@@ -1,0 +1,52 @@
+name: Deploy UAF web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Validate static site
+        run: |
+          test -f web/index.html
+          test -f web/styles.css
+          test -f web/app.js
+          test -f web/samples/sample-homework.pdf
+          test -f web/samples/sample-homework.html
+          test -f web/assets/fonts/uaf-serif-400.woff2
+          test -f web/assets/fonts/uaf-serif-600.woff2
+          test -f web/assets/logo.svg
+          test -f web/assets/logo-badge.svg
+
+      - name: Upload web artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

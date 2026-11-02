@@ -1,54 +1,42 @@
-# UAF HTML 渲染器规范 v1.0
+# UAF HTML 渲染器参考说明 v1.0
 
-本文档描述 UAF v1.0 的 HTML 渲染器参考实现，包括 HTML 模板结构、CSS 样式、打印为 PDF 的建议，以及与 [`visual-spec.md`](./visual-spec.md) 的视觉对齐。UAF 标准不强制要求 HTML 渲染器使用特定的 CSS 值或视觉样式；本文档中的具体样式值为参考实现默认值，第三方渲染器不必精确匹配。
+> **非规范性参考**：本文描述 TypeScript `@uaf/html` 参考实现及其 HTML-to-PDF 流程。具体 DOM、CSS 和依赖不是第三方实现的合规条件；规范要求见 [uaf-v1.0.md](./uaf-v1.0.md) 与 [csv-schema.md](./csv-schema.md)。
 
-## 1. 概述
+## 1. 参考流程
 
-HTML 渲染器是 TypeScript 参考实现的默认 PDF 导出路径，也是 UAF 的可预览展示中间层：
+`@uaf/html` 将 `UafDocument` 渲染为自包含 HTML，用于：
 
-1. 将 [`UafDocument`](./csv-schema.md#6-多记录与逻辑层映射) 渲染为**自包含的 HTML 文档**（含内联 CSS）。
-2. 用户可直接在浏览器中打开 HTML 并打印为 PDF。
-3. 可选地，通过 Puppeteer（无头 Chromium）或系统 Chrome/Edge 的 headless print-to-pdf 自动将 HTML 转为 PDF，并用 `pdf-lib` 嵌入 `uaf_payload.csv` 附件。
+1. 浏览器预览；
+2. 用户手动打印；
+3. 通过 Puppeteer 或系统 Chrome/Edge 自动打印为 PDF；
+4. 在 PDF 中嵌入 `uaf_payload.csv`。
 
-此方法的优势：
-- 依赖浏览器的排版引擎，天然支持复杂文本布局与换行。
-- 不强制嵌入字体（使用系统字体栈）。
-- 用户可手动调整后再打印。
+浏览器负责文本测量、换行和分页。参考实现允许一至多页输出，不限制为单页。
 
-## 2. HTML 模板规范
+## 2. HTML 结构
 
-### 2.1 自包含要求
+参考实现生成：
 
-- 必须是完整的、有效的 **HTML5 文档**（含 `<!DOCTYPE html>`）。
-- 所有 CSS 必须内联在 `<style>` 标签中，**不得引用外部样式表**。
-- 不得依赖外部图像或字体文件（使用系统字体栈）。
-- 不得包含脚本、iframe/object/embed、事件处理属性（`on*`）、自动跳转或其他活动/外部加载内容。
-- 应在 `<body>` 末尾包含一个 inert 的 `<template id="uaf-payload-csv" data-filename="uaf_payload.csv">`，其文本内容为 HTML 转义后的标准 UAF CSV payload，便于 HTML 展示文件保持自包含与可审计。
-- HTML 解析器可从该 template 中解码多行 CSV，并按标准 CSV Schema 恢复完整 `UafDocument`。
-- HTML 校验器应验证 template 存在、CSV 可解析且 payload 满足标准 Schema，并确认可见卡片中的科目、日期、正文、标签和续卡提示与该 payload 一致。
+- HTML5 doctype 和内联 `<style>`；
+- 包含全部卡片的 `<main class="document">`；
+- 固定水印元素；
+- `<template id="uaf-payload-csv" data-filename="uaf_payload.csv">`，其文本为 HTML 转义后的 CSV；
+- 无脚本、外部资源或事件处理属性。
 
-### 2.2 页面尺寸（推荐默认）
+template 中的 CSV 是机器载荷。可见卡片由同一份 `UafDocument` 生成，长内容通过续卡展示，不使用省略号丢弃正文或标签。
 
-| 属性 | 参考实现值 |
-|------|------|
-| 纸张 | A4 |
-| 方向 | 纵向（Portrait） |
-| 宽度 | `210mm` |
-| 高度 | 每页 `297mm`，内容超出时自动分页 |
-| 页数 | **1**（参考实现禁止分页） |
+当前 TypeScript `validateUafHtml()` 检查载荷提取、基础打印结构、水印和部分外部资源限制。它不是任意 HTML 可见内容与载荷一致性的通用证明；完整合规仍需满足总规范第 5 节。
 
-CSS 控制方式：
+## 3. 页面与打印 CSS
+
+参考页面设置：
 
 ```css
 @page {
   size: A4 portrait;
   margin: 0;
 }
-```
 
-### 2.3 打印行为控制
-
-```css
 @media print {
   body {
     margin: 0;
@@ -58,177 +46,99 @@ CSS 控制方式：
 }
 ```
 
-## 3. 参考实现的视觉样式
+页面高度为 297mm，内容超出时由浏览器分页。手动打印时建议启用背景图形并关闭浏览器附加页眉、页脚；这些设置影响参考视觉效果，不改变 UAF 数据层。
 
-HTML 渲染器的视觉输出建议与 [`visual-spec.md`](./visual-spec.md) 的参考实现对齐，但不强制要求精确匹配。以下 CSS 值为参考实现默认样式，第三方渲染器不必精确匹配。
+## 4. 默认布局与样式
 
-### 3.1 页面背景
+参考实现采用双列 CSS Grid，而不是通栏单卡：
 
-- 颜色：`#F8FAFC`（浅灰蓝）
+```css
+.document {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14pt;
+  align-items: start;
+  padding: 40pt;
+}
+```
 
-### 3.2 卡片
+卡片设置 `break-inside: avoid` 和 `page-break-inside: avoid`，高度随内容变化。默认值如下：
 
-| 属性 | 值 |
-|------|-----|
-| 背景 | `#FFFFFF` |
-| 圆角 | `16pt` |
-| 边框 | `1pt solid #E2E8F0` |
-| 阴影 | `0 2pt 8pt rgba(148, 163, 184, 0.15)`（可选，打印时应保留） |
-| 顶边距 | `40pt`（距页面顶部） |
-| 左右边距 | `40pt` |
-| 内边距 | `24pt` |
-| 宽度 | `页面宽度 - 80pt`（即 `210mm - 80pt`） |
-| 高度 | 由内容自适应，**不得固定为整页高** |
+| 区域 | 参考样式 |
+|------|----------|
+| 页面背景 | `#F8FAFC` |
+| 卡片 | 白色背景、16pt 圆角、1pt `#E2E8F0` 边框 |
+| 卡片内边距 | 24pt |
+| 科目胶囊 | `#2563EB` 背景、白色文字、14pt |
+| 日期胶囊 | `#F1F5F9` 背景、`#334155` 文字、12pt |
+| 正文 | `#0F172A`、22pt、1.5 倍行高 |
+| 标签 | `#E0E7FF` 背景、`#3730A3` 文字、11pt |
+| 卡片及标签区间距 | 按 14pt、20pt、8pt 等默认值组织 |
 
-### 3.3 顶栏
+正文中的换行渲染为 `<br>`。无标签时不生成空标签容器。
 
-#### 科目胶囊（左侧）
+日期显示支持：
 
-| 属性 | 值 |
-|------|-----|
-| 背景 | `#2563EB` |
-| 文字色 | `#FFFFFF` |
-| 字号 | `14pt` |
-| 内边距 | `8pt 16pt` |
-| 形状 | 胶囊（`border-radius: 9999pt`） |
+- `dateDisplay: "zh"`：默认，尽可能显示为 `YYYY年M月D日`；
+- `dateDisplay: "iso"`：保留原始 `date` 字符串。
 
-#### 日期胶囊（右侧）
+## 5. 字体与水印
 
-| 属性 | 值 |
-|------|-----|
-| 背景 | `#F1F5F9` |
-| 文字色 | `#334155` |
-| 字号 | `12pt` |
-| 内边距 | `6pt 12pt` |
-| 形状 | 胶囊 |
-
-#### 日期显示格式
-
-- `dateDisplay: "zh"`（默认）：`YYYY年M月D日`
-- `dateDisplay: "iso"`：保持原始 ISO 8601 字符串
-
-### 3.4 正文区
-
-| 属性 | 值 |
-|------|-----|
-| 字号 | `22pt`（默认） |
-| 行高 | `1.5` |
-| 字色 | `#0F172A` |
-| 对齐 | 左对齐 |
-| 顶部间距 | 分隔线下方 `20pt` |
-
-正文中的换行符（`\n`）应渲染为 `<br>`，保留原文换行。
-
-### 3.5 标签区
-
-| 属性 | 值 |
-|------|-----|
-| 背景 | `#E0E7FF` |
-| 文字色 | `#3730A3` |
-| 字号 | `11pt` |
-| 内边距 | `5pt 10pt` |
-| 形状 | 胶囊 |
-| chip 间距 | `8pt` |
-| 与正文间距 | `20pt` |
-
-若无标签，此区域应完全隐藏（不渲染空容器）。
-
-### 3.6 字体
-
-使用系统默认中文字体栈，**不强制嵌入字体**：
+参考 HTML 使用系统字体栈：
 
 ```css
 font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
   "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
 ```
 
-## 4. 水印
+HTML 不加载外部字体，但浏览器输出的 PDF 可以嵌入系统字体或其子集。
 
-UAF 合规性要求 HTML 渲染输出须包含水印文本。
+水印参考样式为右下角 40pt、10pt、`#94A3B8`、50% 透明度。实现使用 `position: fixed`，而不是仅相对整个文档定位一次的绝对定位，以便打印时每页重复显示。固定文本和每页要求由总规范定义。
 
-| 属性 | 值 |
-|------|-----|
-| 文本 | `本文件符合UAF标准规范` |
-| 字号 | `10pt` |
-| 字色 | `#94A3B8` |
-| 透明度 | `50%`（`opacity: 0.5`） |
-| 水平位置 | 距右边缘 `40pt` |
-| 垂直位置 | 距下边缘 `40pt` |
-| 旋转 | `0°`（水平放置） |
+## 6. 续卡行为
 
-实现方式：使用绝对定位（`position: absolute`）的 `<div>`，放置于 `<body>` 内、卡片之外。
+参考实现按内容长度和换行拆分正文：
 
-## 5. 打印为 PDF 的推荐设置
+- 后续正文卡在科目后添加 `（续）`；
+- 非最后的正文卡显示 `正文下页继续`；
+- 标签只出现在最后一个正文卡及其后的标签续卡；
+- 标签过多时追加标签续卡，并显示 `标签下页继续`；
+- 分段不改变 template 中的原始 CSV 载荷。
 
-当用户从浏览器打印 HTML 为 PDF 时，建议以下设置以获得最佳效果：
+这些提示文案和分组阈值属于参考实现细节，不是跨实现交换协议。
 
-### 5.1 浏览器设置（推荐）
+## 7. HTML-to-PDF 自动化
 
-| 设置 | 要求 |
-|------|------|
-| 纸张尺寸 | A4 |
-| 方向 | 纵向 |
-| 边距 | 无 / 最小化（由 CSS `@page { margin: 0 }` 控制） |
-| 背景图形 | **必须勾选**（否则卡片背景、阴影、颜色丢失） |
-| 页眉 | 空 |
-| 页脚 | 空 |
+`htmlToPdf()` 优先使用 Puppeteer；未安装 Puppeteer 时，可查找 `UAF_CHROMIUM_EXECUTABLE`、`PUPPETEER_EXECUTABLE_PATH`、`CHROME_PATH` 或常见系统 Chrome/Edge 路径。两者均不可用时，调用会失败并提示安装或配置浏览器。
 
-### 5.2 分页建议
+主要参数默认值：
 
-- 卡片使用两列流式布局，并设置 `break-inside: avoid`。
-- 单项正文过长时拆成带 `（续）` 标识的卡片，正文续卡不重复标签。
-- 标签超过两行时追加标签续卡；每张卡最多两行，标签不得丢失或改变顺序。
-- 每页建议显示 UAF 水印。
-- 若正文过长超出页面，允许浏览器自动缩小，但鼓励实现层做内容截断提示。
+| 参数 | 默认值 |
+|------|--------|
+| `width` | `210mm` |
+| `height` | `297mm` |
+| `printBackground` | `true` |
+| `waitUntil` | `networkidle0` |
+| `launchOptions` | `{}` |
+| `browserArgs` | `[]` |
 
-## 6. HTML → PDF 自动化转换
+`createUafPdfFromHtml(payload)` 的参考流程为：
 
-`@uaf/html` 包提供自动化转换函数 `htmlToPdf()`，优先使用 **Puppeteer**（无头 Chromium），未安装 Puppeteer 时回退到系统 Chrome/Edge 的 headless print-to-pdf。
+1. 校验并序列化 `UafDocument`；
+2. 渲染自包含 HTML；
+3. 调用浏览器打印管线生成 PDF；
+4. 用 `pdf-lib` 加载 PDF，要求页数至少为 1，接受多页；
+5. 嵌入 `uaf_payload.csv`；
+6. 保存并返回 PDF 字节。
 
-### 6.1 依赖声明
+## 8. 两条 PDF 生成路径
 
-- Puppeteer 声明为 `optionalDependency`。
-- 若未安装，运行时应查找 `UAF_CHROMIUM_EXECUTABLE`、`PUPPETEER_EXECUTABLE_PATH`、`CHROME_PATH` 或常见系统 Chrome/Edge 路径。
-- 若 Puppeteer 和系统浏览器均不可用，调用 `htmlToPdf()` 时抛出错误，提示用户安装 Puppeteer、设置浏览器路径或使用原生 PDF renderer。
+| 特性 | `@uaf/pdf` 原生路径 | `@uaf/html` 浏览器路径 |
+|------|---------------------|------------------------|
+| 排版 | 代码测量并绘制卡片 | 浏览器排版与分页 |
+| 字体 | 显式加载并嵌入字体子集 | HTML 使用系统字体栈；PDF 是否嵌入由浏览器决定 |
+| 文件体积 | 受字体子集和页数影响 | 受浏览器、字体和页数影响 |
+| 主要依赖 | `pdf-lib`、fontkit 与字体资源 | `pdf-lib` 及可选 Puppeteer 或系统浏览器 |
+| 离线条件 | 字体资源可用时可离线生成 | 已有可用浏览器时可离线生成 |
 
-### 6.2 转换参数
-
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `width` | `"210mm"` | 纸张宽度 |
-| `height` | `"297mm"` | 纸张高度 |
-| `printBackground` | `true` | 是否打印背景图形 |
-| `browser` | 新实例 | 可复用的 Puppeteer `Browser` 实例 |
-| `launchOptions` | `{}` | 创建 Puppeteer 浏览器实例时传入的启动参数 |
-| `waitUntil` | `"networkidle0"` | 打印前等待页面达到的加载状态 |
-| `browserExecutablePath` | 自动查找 | Chrome/Edge 可执行文件路径，用于无 Puppeteer 的 headless print-to-pdf |
-| `browserArgs` | `[]` | 传给浏览器可执行文件的额外参数 |
-
-### 6.3 完整 Pipeline
-
-`createUafPdfFromHtml(payload)` 的执行流程：
-
-1. 调用 `validatePayload(payload)` 校验输入。
-2. 调用 `serializePayload(validated)` 生成 CSV 字符串。
-3. 调用 `renderUafHtml(validated)` 生成 HTML 字符串。
-4. 调用 `htmlToPdf(html)` 将 HTML 转为 PDF 字节数组。
-5. 用 `pdf-lib` 加载 PDF，并验证页数必须为 1。
-6. 调用 `PDFDocument.attach()` 嵌入 CSV。
-7. 返回 `pdfDoc.save()` 的字节数组。
-
-## 7. 无障碍与兼容
-
-- 正文 `#0F172A` 与背景 `#F8FAFC` 的对比度 ≈ 12:1，满足 WCAG AAA。
-- 水印 `#94A3B8` 与背景 `#F8FAFC` 的对比度 ≈ 1.8:1，避免干扰阅读。
-- HTML 模板必须在 Chrome、Edge、Firefox、Safari 的最新版本中正确渲染。
-
-## 8. 与现有实现的对比
-
-| 特性 | `@uaf/pdf`（原生矢量） | `@uaf/html`（HTML 渲染） |
-|------|------------------------|--------------------------|
-| 排版引擎 | pdf-lib 手动计算 | 浏览器/Chromium 自动排版 |
-| 字体 | 需嵌入 Noto Sans SC 子集 | 系统字体栈，无需嵌入 |
-| 文件体积 | < 500 KB（含子集字体） | 较小（仅 PDF 本身，无嵌入字体） |
-| 依赖 | pdf-lib + fontkit | pdf-lib + 可选 Puppeteer 或系统 Chrome/Edge |
-| 离线能力 | 完全离线 | 可复用已安装浏览器；仅 Puppeteer 自带 Chromium 需要下载 |
-| 自定义 | 需改代码 | 可手写调整 HTML/CSS 后打印 |
+两种路径都必须生成符合总规范的 PDF；选择其中一条路径不构成不同的 UAF 版本。

@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Artifact hashes require identical bytes on every checkout
+examples/sample-homework.uaf/** -text

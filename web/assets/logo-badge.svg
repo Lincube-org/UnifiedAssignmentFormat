@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none" role="img" aria-labelledby="uaf-logo-badge-title uaf-logo-badge-desc">
+  <title id="uaf-logo-badge-title">UAF badge</title>
+  <desc id="uaf-logo-badge-desc">A plum badge with a cream line-drawn smiley: a pill eye, an F eye, and a checkmark smile.</desc>
+  <rect width="120" height="120" rx="28" fill="#5B1C32"/>
+  <g stroke="#FFFCF8" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(60 60) scale(.96) translate(-60 -60)">
+    <rect x="23" y="33" width="32" height="26" rx="13"/>
+    <path d="M72 31H96M72 31V61M72 46H90"/>
+    <path d="M32 75C41 83.5 48.5 89 56 89C67 89 78 78 88 65"/>
+  </g>
+</svg>
