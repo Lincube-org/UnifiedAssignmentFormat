@@ -80,7 +80,7 @@ manifest 包含：
 5. 对每个 artifact 比较实际字节数和 SHA-256；
 6. 按 [csv-schema.md](./csv-schema.md) 解析 `entrypoints.payload`；
 7. 按总规范校验 `entrypoints.display` 和 `entrypoints.exchange`；
-8. 分别从 CSV、HTML template 和 PDF 附件恢复 `UafDocument`；
+8. 分别从 CSV、HTML template（`id` 为 `uaf-payload-csv`，见总规范第 5 节）和 PDF 附件恢复 `UafDocument`；
 9. 比较三份逻辑载荷，确认记录数量、记录顺序、四个字段及标签顺序逐项一致。
 
 任一步骤失败时，整个整合包无效。消费者仍可将 PDF 作为普通文件展示，但不得把包内任何部分载荷导入系统记录，也不得把逻辑载荷一致替代哈希或制品合规检查。
